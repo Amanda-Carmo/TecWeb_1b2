@@ -1,0 +1,52 @@
+{% extends "notes/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class = "appbar">    
+    <img class="logo"  src="{% static 'notes/img/logo-getit.png' %}" alt = "image"/>
+    <!-- <img src="notes\static\img\logo-getit.png"> -->
+    <span class="subtitlle">Como o Post-it, mas com outro verbo</span>
+</div>
+
+<main class="container">
+    <form class="form-card" method="post">
+        {% csrf_token %}
+      <!-- <label for="titulo">Título</label> -->
+      <input id="titulo" type="text" name="titulo" class="form-card-title" placeholder="Título"/>
+      <!-- <label for="detalhes">Detalhes</label> -->
+      <textarea id="detalhes" name="detalhes" class="autoresize" placeholder="Digite o conteúdo..."></textarea>
+      <input class="form-card-tag" type="text" name="tag" placeholder="Insira uma tag"/>
+      <button class="btn" type="submit">Criar</button> 
+    </form>
+
+    <form action='/tags/' method="post" class="form-card2">
+        {% csrf_token %}
+      <button class="btn" type="submit">Filtrar Por Tag</button>
+    </form>
+
+    <div class="card-container">
+        {% for note in notes %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        <div class="card" id = "card{{ note.id }}">
+            <form class = "form" method="POST">
+                {% csrf_token %}
+                <h3 class="card-title" id = "tx{{ note.id }}" onclick="edit('card-titleEdit', this)">{{ note.title }}</h3>
+                <input id="inp1{{ note.id }}" class="card-titleEdit" type="text" name="titulo" value="{{note.title}}" id="inp1{{ note.id }}"/>
+                <div class="card-content">
+                    <p id="tx2{{ note.id }}" onclick="edit('card-contEdit', this)">{{note.content}}</p>
+                    <input id="inp2{{ note.id }}" value="{{ note.content }}" style="display: none;" class="card-contEdit" type="text" name="detalhes" value="{details}" id="input_title"/>
+                </div>  
+                <div class="button-bar">
+                    <button class="delBtn" type="submit" name="delete" value="{{ note.id }}"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    <button class="editBtn" type="submit" name="update" value="{{ note.id }}" id="update"><i class="fa fa-save" aria-hidden="true"></i></button>
+                </div>
+            </form>          
+        </div>
+        {% endfor %}
+    </div>
+    {% load static %}
+    <script type="text/javascript" src="{% static 'notes/script/getit.js' %}"></script>
+    
+    {% endblock %}
+</main>
